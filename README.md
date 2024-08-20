@@ -1,7 +1,11 @@
+# Directory Structure for Dirac Programming Task
+
+```plaintext
 dirac_programming_task_v2/
 ├── build/
+│   └── (Compiled executables and build artifacts will be placed here)
 ├── inc/
-│   └── dirac.h
+│   ├── dirac.h
 │   └── dirac_test_vectors.h
 ├── src/
 │   └── hardlimiter.c
