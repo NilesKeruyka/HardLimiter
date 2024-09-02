@@ -6,8 +6,6 @@
 #include "dirac_test_vectors.h"
 
 
-// Global variable to store the threshold value
-static float global_threshold = 0.0f;
 
 // Implementations of the virtual functions
 int32_t my_process_block(dirac_processor_t *processor, float *buffer, int num_samples) {
@@ -16,10 +14,10 @@ int32_t my_process_block(dirac_processor_t *processor, float *buffer, int num_sa
     }
     for (int i = 0; i < num_samples; i++) {
         float abs_value = fabs(buffer[i]); // Get the magnitude of the current sample
-        if (abs_value > global_threshold) {
+        if (abs_value > processor->threshold) {
             // If magnitude is greater than the threshold, set magnitude to threshold
             // while maintaining the original sign
-            buffer[i] = (buffer[i] > 0) ? global_threshold : -global_threshold;
+            buffer[i] = (buffer[i] > 0) ? processor->threshold : -processor->threshold;
         }
         // Otherwise, the sample remains the same
     }
@@ -32,7 +30,7 @@ int32_t my_set_parameter(dirac_processor_t *processor, int32_t parameter, float 
     }
 
     if (parameter == 1) { // It is assumed that parameter ID for threshold is 1.
-        global_threshold = value;
+        processor->threshold = value;
     } else {
         return -1;
     }
@@ -94,7 +92,7 @@ void run_test(const dirac_test_vector *test) {
         printf("Test passed.\n");
     } else {
         printf("Test failed.\n");
-        printf("Threshold: %.8f\n", global_threshold);
+        printf("Threshold: %.8f\n", my_processor.threshold);
         printf("Input: ");
         for (int i = 0; i < TEST_CASE_NUM_SAMPLES; ++i) {
             printf("%.2f ", test->input[i]);
@@ -134,6 +132,7 @@ int main(int argc, char *argv[]) {
     // Initialize a dirac_processor_t instance
     dirac_processor_t my_processor = {
         .vtbl_ptr = &my_vtable,
+        .threshold = threshold,
     };
 
     // Read number of samples
