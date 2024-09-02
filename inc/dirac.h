@@ -39,9 +39,13 @@ typedef struct {
  * structure elements, but those are invisible to the users of the object.
  *
  * This @ref dirac_vtbl_t structure is all that is publicly visible.
+ * 
+ * threshold element is unique to each to processor object
  */
 struct dirac_processor_t {
     dirac_vtbl_t *vtbl_ptr; /**< Pointer to the virtual function table. */
+    float threshold; /**< Threshold limit */
 };
 
 #endif // DIRAC_H
+
